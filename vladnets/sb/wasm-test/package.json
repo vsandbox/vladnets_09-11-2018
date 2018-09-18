@@ -1,0 +1,10 @@
+{
+  "name": "@vladnets/sb-wasm-test",
+  "version": "1.0.0-a",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "compile": "emcc -s \"BINARYEN_METHOD='native-wasm'\" -s EXTRA_EXPORTED_RUNTIME_METHODS=['ccall'] src/test.cpp -o dist/test.js"
+  }
+}

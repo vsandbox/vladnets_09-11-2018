@@ -1,0 +1,7 @@
+{
+    "packages": [
+      "@vladnets/sandbox/*"
+    ],
+    "version": "1.0.0-a",
+    "npmClient": "yarn"
+  }
