@@ -29,8 +29,7 @@ const defaultConfig = {
     },
 
     watchOptions: {
-        aggregateTimeout: 1000,
-
+        aggregateTimeout: 500,
         ignored: [
             /node_modules([\\]+|\/)+(?!@vladnets)/,
             /d\.ts/,

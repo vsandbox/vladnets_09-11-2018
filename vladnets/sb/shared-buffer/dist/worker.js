@@ -93,7 +93,13 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-console.log("I'm a worker, biaaaatch");
+addEventListener("message", (message) => {
+    const initView = new Uint8Array(message.data);
+    console.log("from worker", initView.join("-"));
+    setInterval(() => {
+        initView.set([1, 1]);
+    }, 320);
+});
 
 
 /***/ })
