@@ -1,8 +1,7 @@
-declare const length = 2000000;
-declare const byteLength: number;
-declare const buffer: ArrayBuffer;
-declare const arr: Uint16Array;
-declare const view: DataView;
-declare let items: any[];
-declare function typedArr(): void;
-declare function viewArr(): void;
+declare let length: number;
+declare let itemByteLength: number;
+declare let byteLength: number;
+declare let buffer: ArrayBuffer;
+declare let view: DataView;
+declare let typedArr: Uint32Array;
+declare let arr2: number[];
