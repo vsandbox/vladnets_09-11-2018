@@ -9,7 +9,7 @@
     "noImplicitAny": true,
     "declaration": true,
     "declarationDir": "./dist",
-    "lib": ["esnext"],
+    "lib": ["esnext", "webworker", "dom", "es5", "es6", "es2015", "es7", "es2017"],
     "baseUrl": ".",
     "paths": {
       "com/*": ["src/com/*"]

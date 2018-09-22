@@ -14,4 +14,5 @@
 - from typed array to array of `200 000` uin32 ~ `3ms`
 - fill by single view of `200 000` uin32 ~ `17ms`
 - from buffer to array by a single view of `200 000` uin32 ~ `12ms`
-- Arra.from typed array of `200 000` uin32 ~ `50ms`
+- Array.from typed array of `200 000` uin32 ~ `50ms`
+- Read of `20 000` strings for `10` chars each ~ `14ms`

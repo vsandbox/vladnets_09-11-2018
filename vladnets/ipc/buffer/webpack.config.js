@@ -1,5 +1,5 @@
 const path = require("path");
-// const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const defaultConfig = {
     entry: "",
@@ -24,7 +24,7 @@ const defaultConfig = {
 
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "main.js",
+        filename: "[name].js",
         // libraryTarget: "umd",
         globalObject: "this",
     },
@@ -43,10 +43,20 @@ const defaultConfig = {
 const configs = {
     index: {
         ...defaultConfig,
-        entry: "./src/index.ts",
+        entry: {
+            index: "./src/index.ts",
+        },
+        plugins: [...defaultConfig.plugins, new HtmlWebpackPlugin()],
+    },
+    worker: {
+        ...defaultConfig,
+        entry: {
+            worker: "./src/worker.ts",
+        },
     },
 };
 
 module.exports = env => {
-    return configs[env.name];
+    const names = env.names.split(",");
+    return names.map(name => configs[name]);
 };
