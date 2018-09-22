@@ -9,7 +9,7 @@
     "compile:watch": "webpack --watch --colors --env.names=index",
     "start": "nodemon -q -e ts -w ./dist/main.js dist/main.js",
     "start:watch": "concurrently -n \"webbpack,app\" \"yarn run compile:watch\" \"yarn start\"",
-    "start:server": "webpack-dev-server --colors --env.names=index,worker"
+    "start:server": "webpack-dev-server --colors --env.names=index"
   },
   "devDependencies": {
     "@types/node": "^10.10.1",

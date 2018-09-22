@@ -48,12 +48,6 @@ const configs = {
         },
         plugins: [...defaultConfig.plugins, new HtmlWebpackPlugin()],
     },
-    worker: {
-        ...defaultConfig,
-        entry: {
-            worker: "./src/worker.ts",
-        },
-    },
 };
 
 module.exports = env => {
