@@ -93,12 +93,13 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-addEventListener("message", (message) => {
-    const initView = new Uint8Array(message.data);
-    console.log("from worker", initView.join("-"));
-    setInterval(() => {
-        initView.set([1, 1]);
-    }, 320);
+addEventListener("message", (event) => {
+    // const initView = new Uint8Array(message.data);
+    // console.log("from worker", event);
+    postMessage("message");
+    // setInterval(() => {
+    //     initView.set([1, 1]);
+    // }, 320);
 });
 
 

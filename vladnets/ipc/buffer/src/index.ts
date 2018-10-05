@@ -5,7 +5,6 @@ const length = 10000;
 const buffer = new ArrayBuffer(Int16Array.BYTES_PER_ELEMENT * length + 8);
 const view = new DataView(buffer);
 
-
 // set value type
 view.setUint8(ArrayReader.VALUE_TYPE_BUFFER_OFFSET, EValueType.int16);
 
@@ -29,4 +28,3 @@ console.timeEnd("get element from direct reader");
 console.time("get element from js array");
 const el2 = values[3];
 console.timeEnd("get element from js array");
-

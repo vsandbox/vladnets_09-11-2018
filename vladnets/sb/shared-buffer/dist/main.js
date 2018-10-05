@@ -90,20 +90,12 @@
 /*!*********************!*\
   !*** ./src/main.ts ***!
   \*********************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*! no static exports found */
+/***/ (function(module, exports) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-console.log("fuck you");
-const buffer = new SharedArrayBuffer(2);
-const worker = new Worker("worker.js");
-worker.postMessage(buffer);
-const initView = new Uint8Array(buffer);
-setInterval(() => {
-    console.log("from index", initView.join("-"));
-}, 500);
-/* harmony default export */ __webpack_exports__["default"] = (null);
+// const someComponentsBuffer = new SharedArrayBuffer(12000000);
+// const anotherComponentsBuffer = new SharedArrayBuffer(12000000);
+// export default null;
 
 
 /***/ })

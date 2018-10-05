@@ -2,10 +2,11 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const defaultConfig = {
+    entry: "",
     mode: "development",
     devtool: "source-map",
     target: "web",
-    // stats: "errors-only",
+    stats: "errors-only",
 
     module: {
         rules: [
@@ -14,6 +15,21 @@ const defaultConfig = {
                 use: "ts-loader",
                 exclude: /node_modules/,
             },
+            {
+                test: /\.glsl$/,
+                loader: "webpack-glsl-loader",
+            },
+            {
+                test: /\.(png|jpeg|gif)$/,
+                use: [
+                  {
+                    loader: "file-loader",
+                    options: {
+                        publicPath: "./"
+                    }
+                  }
+                ]
+            }
         ],
     },
 
@@ -23,7 +39,7 @@ const defaultConfig = {
 
     output: {
         path: path.resolve(__dirname, "dist"),
-        filename: "main.js",
+        filename: "[name].js",
         // libraryTarget: "umd",
         globalObject: "this",
     },
@@ -41,19 +57,12 @@ const defaultConfig = {
 
 const configs = {
     index: {
-        entry: "./src/main.ts",
         ...defaultConfig,
+        entry: {
+            index: "./src/index.ts",
+        },
         plugins: [...defaultConfig.plugins, new HtmlWebpackPlugin()],
     },
-    worker: {
-        entry: "./src/worker.ts",
-        ...defaultConfig,
-        target: "webworker",
-        output: {
-            ...defaultConfig.output,
-            filename: "worker.js",
-        }
-    }
 };
 
 module.exports = env => {

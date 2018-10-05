@@ -1,15 +1,6 @@
-console.log("fuck you");
+// const someComponentsBuffer = new SharedArrayBuffer(12000000);
+// const anotherComponentsBuffer = new SharedArrayBuffer(12000000);
 
-const buffer = new SharedArrayBuffer(2);
-const worker = new Worker("worker.js");
 
-worker.postMessage(buffer);
-
-const initView = new Uint8Array(buffer);
-
-setInterval(() => {
-    console.log("from index", initView.join("-"));
-}, 500);
-
-export default null;
+// export default null;
 

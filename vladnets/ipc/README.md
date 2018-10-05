@@ -16,3 +16,6 @@
 - from buffer to array by a single view of `200 000` uin32 ~ `12ms`
 - Array.from typed array of `200 000` uin32 ~ `50ms`
 - Read of `20 000` strings for `10` chars each ~ `14ms`
+
+# Value types
+number, number[], struct, struct[]

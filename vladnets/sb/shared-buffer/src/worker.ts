@@ -1,8 +1,10 @@
-addEventListener("message", (message: any) => {
-    const initView = new Uint8Array(message.data);
-    console.log("from worker", initView.join("-"));
+addEventListener("message", (event: any) => {
+    // const initView = new Uint8Array(message.data);
+    // console.log("from worker", event);
 
-    setInterval(() => {
-        initView.set([1, 1]);
-    }, 320);
+    (postMessage as any)("message");
+
+    // setInterval(() => {
+    //     initView.set([1, 1]);
+    // }, 320);
 });
