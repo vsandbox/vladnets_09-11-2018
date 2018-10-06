@@ -1,5 +1,16 @@
 # ipc
 
+# Similarities
+What is similiar between one and second one? The "one" word.
+
+MemoryNode and MemoryValue
+- byteLength
+
+MemoryNode is a holder for MemoryValue. Maybe just call it MemoryValueHolder?
+
+
+
+
 # Notes
 - Use a `SINGLE` buffer all the time. Pass current offset to value parsers.
     - to increase performance
