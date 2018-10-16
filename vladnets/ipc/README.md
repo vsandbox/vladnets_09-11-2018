@@ -1,5 +1,9 @@
 # ipc
 
+# To Do
+- lock
+    - store a thread id that has locked a memory node
+
 # Similarities
 What is similiar between one and second one? The "one" word.
 
