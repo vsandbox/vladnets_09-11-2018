@@ -1,45 +1,34 @@
-import { TTypedArray, TTypedArrayConstructor } from "./interfaces/TTypedArray";
+import { AMemoryNode, EMemoryNodeLockState, IMemoryNodeOptions } from "./AMemoryNode";
+import { TTypedArrayConstructor } from "./interfaces/TTypedArray";
 
 const SyncArrayConstructor: TTypedArrayConstructor = Uint8Array;
 
-export interface IMemoryNodeOptions {
-    parent: MemoryNode;
-    children: MemoryNode[];
-}
-
-export enum EMemoryNodeBufferState { unset = 0, set = 1 };
-
-export class MemoryNode<T = null> {
-    public readonly parent: MemoryNode;
-    public readonly children: MemoryNode[];
-    public readonly byteLength: number;
-
-    protected buffer: SharedArrayBuffer;
-    protected bufferByteOffset: number;
-    protected bufferState: EMemoryNodeBufferState;
+export class MemoryNode<T = any> extends AMemoryNode<T> {
+    protected syncArray: Uint8Array;
 
     constructor(options: IMemoryNodeOptions) {
-        this.parent = options.parent;
-        this.children = options.children;
-        this.byteLength = this.computeByteLength();
-        this.bufferState = EMemoryNodeBufferState.unset;
+        super(options);
     }
 
     public setBuffer(buffer: SharedArrayBuffer, byteOffset: number = 0) {
-        this.buffer = buffer;
-        this.bufferByteOffset = byteOffset;
+        super.setBuffer(buffer, byteOffset);
+        this.syncArray = new Uint8Array(buffer, 0, SyncArrayConstructor.BYTES_PER_ELEMENT);
+    }
 
-        let lastByteOffset = byteOffset + this.byteLength;
-        this.children.forEach(child => {
-            child.setBuffer(buffer, lastByteOffset);
-            lastByteOffset += child.byteLength;
-        });
-        this.bufferState = EMemoryNodeBufferState.set;
+    public getValue(): T {
+        return (1 as any) as T;
+    }
+    public setValue(value: T) {}
+    public getLock() {
+        return {} as any;
+    }
+    public setLock(state: EMemoryNodeLockState, threadId = this.env.threadId) {
+
     }
 
     public computeByteLength(): number {
         const syncByteLength = SyncArrayConstructor.BYTES_PER_ELEMENT;
-        const childrenByteLength = this.children.reduce((byteSize, child) => child.byteLength, 0);
-        return syncByteLength + childrenByteLength;
+        return syncByteLength + super.computeByteLength();
     }
 }
+
