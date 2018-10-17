@@ -1,18 +1,9 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "sourceMap": true,
-    "noImplicitAny": true,
-    "declaration": true,
-    "declarationDir": "./dist",
-    "lib": ["esnext", "webworker", "dom", "es5", "es6", "es2015", "es7", "es2017"],
-    "baseUrl": ".",
-    "paths": {
-      "com/*": ["src/com/*"]
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "declaration": true,
+        "declarationDir": "./dist"
     }
-  }
 }
