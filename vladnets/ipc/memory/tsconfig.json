@@ -4,6 +4,11 @@
         "module": "esnext",
         "moduleResolution": "node",
         "declaration": true,
-        "declarationDir": "./dist"
+        "declarationDir": "./dist",
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": true
     }
 }
