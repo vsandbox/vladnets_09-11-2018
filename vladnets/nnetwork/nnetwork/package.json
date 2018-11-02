@@ -1,0 +1,16 @@
+{
+  "name": "@vladnets/nnetwork",
+  "version": "1.0.0-a",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "compile:watch": "nodemon -e ts -w ./src ./rollup.js"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4",
+    "rollup": "^0.66.6",
+    "rollup-plugin-typescript2": "^0.17.2",
+    "typescript": "^3.1.3"
+  }
+}
