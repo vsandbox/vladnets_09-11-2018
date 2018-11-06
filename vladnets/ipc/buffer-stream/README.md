@@ -1,9 +1,14 @@
-# nnetwrork
+# ipc-buffer-stream
 
-Neuron
+byteSize:   1       4           1           1
+name:       lock    byteLength  chunkLeft   readBy
 
-```typescript
-interface Neuron {
-    states: []
-}
+```ts
+[
+    {
+        byteOffset: 0,
+        byteLength: 2,
+        chunkLeft: 2
+    }
+]
 ```

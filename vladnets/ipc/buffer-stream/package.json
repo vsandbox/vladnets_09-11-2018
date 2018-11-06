@@ -1,5 +1,5 @@
 {
-  "name": "@vladnets/nnetwork",
+  "name": "@vladnets/ipc-buffer-stream",
   "version": "1.0.0-a",
   "main": "dist/index.js",
   "license": "MIT",
