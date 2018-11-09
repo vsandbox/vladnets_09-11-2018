@@ -4,130 +4,77 @@
     (factory());
 }(this, (function () { 'use strict';
 
-    class NeuralNetwork {
+    class RelationMatrix {
         constructor(options) {
-            this.inputLayerLength = options.inputLayerLength;
-            this.hiddenLayerLength = options.hiddenLayerLength;
-            this.outputLayerLength = options.outputLayerLength;
-            this.inputMatrix = options.inputMatrix;
-            this.hiddenMatrix = options.hiddenMatrix;
-            this.neuronTransmissionsCache = {};
-            this.inputAndHiddenValues = options.inputAndHiddenValues;
-            this.outputValues = options.outputValues;
-            this.outputValueSummary = 0;
-        }
-        tick() {
-            const inputAndHiddenValueKeys = Object.keys(this.inputAndHiddenValues);
-            const outputOffset = this.inputLayerLength + this.hiddenLayerLength;
-            inputAndHiddenValueKeys.forEach(key => {
-                const neuronIndex = Number(key);
-                const neuronValue = this.inputAndHiddenValues[neuronIndex];
-                const relations = this.getRelations(neuronIndex);
-                let freeValue = 0;
-                relations.forEach((relation, index) => {
-                    const targetNeuronIndex = index + this.inputLayerLength;
-                    if (targetNeuronIndex === neuronIndex)
-                        return;
-                    const cache = this.neuronTransmissionsCache[neuronIndex] || (this.neuronTransmissionsCache[neuronIndex] = {});
-                    const cachedValue = cache[targetNeuronIndex];
-                    const value = neuronValue * relation;
-                    const isOutput = targetNeuronIndex >= outputOffset;
-                    if (isOutput) {
-                        const additionalValue = freeValue > 0 ? freeValue / this.outputLayerLength : 0;
-                        const finalValue = value + additionalValue;
-                        this.outputValueSummary += finalValue;
-                        this.accNeuronValue(targetNeuronIndex, finalValue);
-                        return;
-                    }
-                    if (typeof cachedValue === "number") {
-                        freeValue += cachedValue;
-                        return;
-                    }
-                    this.accNeuronValue(targetNeuronIndex, value);
-                    cache[targetNeuronIndex] = value;
-                });
-                delete this.inputAndHiddenValues[neuronIndex];
-            });
-            const isDone = Object.keys(this.inputAndHiddenValues).length === 0;
-            if (isDone) {
-                for (let i = 0; i < this.outputLayerLength; i++) {
-                    const outputValue = this.outputValues[outputOffset + i];
-                    this.outputValues[outputOffset + i] = outputValue / this.outputValueSummary;
-                }
+            this.inputNeuronsLength = options.inputNeuronsLength;
+            this.hiddenNeuronsLength = options.hiddenNeuronsLength;
+            this.outputNeuronsLength = options.outputNeuronsLength;
+            this.inputAndHiddenNeuronsLength = this.inputNeuronsLength + this.hiddenNeuronsLength;
+            this.inputNeuronRelations = new Array(this.inputNeuronsLength);
+            this.hiddenNeuronRelations = new Array(this.hiddenNeuronsLength);
+            for (let i = 0; i < this.inputNeuronRelations.length; i++) {
+                this.inputNeuronRelations[i] = new Array(this.hiddenNeuronsLength).fill(0);
             }
-            return isDone;
-        }
-        setNeuronValue(neuronIndex, neuronValue) {
-            const isOutput = neuronIndex >= (this.inputLayerLength + this.hiddenLayerLength);
-            if (isOutput)
-                this.outputValues[neuronIndex] = neuronValue;
-            else
-                this.inputAndHiddenValues[neuronIndex] = neuronValue;
-        }
-        setNeuronValues(neuronValues, offset) {
-            neuronValues.forEach((value, index) => {
-                this.setNeuronValue(index + offset, value);
+            for (let i = 0; i < this.hiddenNeuronRelations.length; i++) {
+                this.hiddenNeuronRelations[i] = new Array(this.hiddenNeuronsLength + this.outputNeuronsLength).fill(0);
+            }
+            options.inputNeuronRelations.forEach((neuronRelations, neuronIndex) => {
+                neuronRelations.forEach((relation, targetNeuronIndex) => {
+                    this.inputNeuronRelations[neuronIndex][targetNeuronIndex] = relation;
+                });
+            });
+            options.hiddenNeuronRelations.forEach((neuronRelations, neuronIndex) => {
+                neuronRelations.forEach((relation, targetNeuronIndex) => {
+                    this.hiddenNeuronRelations[neuronIndex][targetNeuronIndex] = relation;
+                });
             });
         }
-        accNeuronValue(neuronIndex, neuronValue) {
-            const isOutput = neuronIndex >= (this.inputLayerLength + this.hiddenLayerLength);
-            const neuronValues = isOutput ? this.outputValues : this.inputAndHiddenValues;
-            const lastNeuronValue = neuronValues[neuronIndex] || 0;
-            const newNeuronValue = lastNeuronValue + neuronValue;
-            if (newNeuronValue)
-                neuronValues[neuronIndex] = lastNeuronValue + neuronValue;
+        getNeuronRelations(neuronIndex) {
+            // if is output neuron
+            if (neuronIndex >= this.inputAndHiddenNeuronsLength)
+                return [];
+            // if is hidden neuron
+            if (neuronIndex >= this.inputNeuronsLength) {
+                return this.hiddenNeuronRelations[neuronIndex - this.inputNeuronsLength];
+            }
+            // if is input neuron
+            return this.inputNeuronRelations[neuronIndex];
         }
-        getRelations(neuronIndex) {
-            const isHidden = neuronIndex >= this.inputLayerLength;
-            const matrix = isHidden ? this.hiddenMatrix : this.inputMatrix;
-            const matrixRelatedNeuronIndex = isHidden ? neuronIndex - this.inputLayerLength : neuronIndex;
-            return matrix[matrixRelatedNeuronIndex];
+        setNeuronRelation(sourceNeuronIndex, targetNeuronIndex, relation) {
+            // if is output neuron
+            if (sourceNeuronIndex >= this.inputAndHiddenNeuronsLength)
+                return;
+            let relativeSourceNeuronIndex;
+            let relations;
+            // if is hidden neuron
+            if (sourceNeuronIndex >= this.inputNeuronsLength) {
+                relativeSourceNeuronIndex = sourceNeuronIndex - this.inputNeuronsLength;
+                relations = this.hiddenNeuronRelations;
+            }
+            else {
+                relativeSourceNeuronIndex = sourceNeuronIndex;
+                relations = this.inputNeuronRelations;
+            }
+            const neuronRelations = relations[relativeSourceNeuronIndex];
+            const lastRelation = neuronRelations[targetNeuronIndex - this.inputNeuronsLength];
+            const diff = relation - lastRelation;
+            const addition = diff / (neuronRelations.length - 1);
+            neuronRelations.forEach((relation, index) => {
+                if (index + this.inputNeuronsLength === sourceNeuronIndex)
+                    return;
+                // neuronRelations[index] += addition;
+            });
         }
     }
 
-    const generateMatrix = (x, y) => {
-        const matrix = new Array(y);
-        for (let i = 0; i < y; i++) {
-            matrix[i] = new Array(x).fill(1 / x);
-        }
-        return matrix;
-    };
-    const inputLayerLength = 2400;
-    const hiddenLayerLength = inputLayerLength * 3;
-    const outputLayerLength = 10;
-    const network = new NeuralNetwork({
-        inputLayerLength,
-        hiddenLayerLength,
-        outputLayerLength,
-        inputMatrix: generateMatrix(hiddenLayerLength, inputLayerLength),
-        hiddenMatrix: generateMatrix(hiddenLayerLength + outputLayerLength, hiddenLayerLength),
-        inputAndHiddenValues: {},
-        outputValues: {},
+    const relationMatrix = new RelationMatrix({
+        inputNeuronsLength: 10,
+        hiddenNeuronsLength: 10 * 2,
+        outputNeuronsLength: 10,
+        inputNeuronRelations: [[1]],
+        hiddenNeuronRelations: [[1]],
     });
-    let timeoutId;
-    document.addEventListener("click", () => {
-        clearTimeout(timeoutId);
-        console.log("network", network);
-    });
-    window.addEventListener("load", () => {
-        const label = document.getElementById("label");
-        if (!label)
-            return;
-        network.setNeuronValues(new Array(inputLayerLength).fill(1), 0);
-        // (window as any).network = network;
-        const startAutoTick = () => {
-            const result = network.tick();
-            const currentTime = Date.now();
-            if (!result) {
-                // label.innerHTML = `Time elapsed: ${(currentTime - startTime) / 1000} seconds`;
-                timeoutId = setTimeout(startAutoTick, 0);
-            }
-            else {
-                label.innerHTML = `Done. Time elapsed: ${(currentTime - startTime) / 1000} seconds. Input length: ${inputLayerLength}, hidden length: ${hiddenLayerLength}, output length: ${outputLayerLength}`;
-            }
-        };
-        const startTime = Date.now();
-        startAutoTick();
-    });
+    relationMatrix.setNeuronRelation(2, 2, 0.5);
+    console.log("relationMatrix", relationMatrix.getNeuronRelations(2));
 
 })));
